@@ -81,7 +81,7 @@ data "aws_iam_policy_document" "read_iam_role"{
     resources = [aws_iam_policy.describe_asg_policy.arn,
     aws_iam_policy.passrole_policy.arn,
     aws_iam_policy.conditional_run_instance_policy.arn,
-    aws_iam_policy.read_iam_role.arn
+    aws_iam_policy.read_iam_role_policy.arn
     ]
   }
 }
