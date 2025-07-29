@@ -10,7 +10,7 @@ resource "aws_launch_template" "privileged1" {
 
   key_name = aws_key_pair.cg_key.key_name  # ← SSH 키 페어 연결
   iam_instance_profile {
-    name = aws_iam_instance_profile.ec2-describe-asg-profile.name
+    name = aws_iam_instance_profile.ec2_describe_asg_profile.name
   }
   network_interfaces {
     device_index                = 0

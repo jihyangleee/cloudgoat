@@ -144,7 +144,7 @@ resource "aws_iam_role_policy_attachment" "read_iam_role_policy"{
 
 #위 역할의 instance profile을 만든다
 resource "aws_iam_instance_profile" "ec2_describe_asg_profile" {
-  name = "aws_iam_instance_profile.ec2_describe_asg_profile.name"
+  name = "ec2_describe_asg_profile.name"
   role = aws_iam_role.ec2_describe_asg.name
 } 
 
@@ -259,7 +259,7 @@ resource "aws_iam_role_policy_attachment" "role_read_attach" {
 
 #위 역할의 instance profile을 만든다
 resource "aws_iam_instance_profile" "ec2_athena_query_profile" {
-  name = "aws_iam_instance_profile.ec2_athena_query_profile"
+  name = "ec2_athena_query_profile"
   role = aws_iam_role.ec2_athena_query.name
 } 
 
