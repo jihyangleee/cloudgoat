@@ -129,7 +129,7 @@ resource "aws_iam_role_policy_attachment" "conditional_run_instance_policy"{
 
 resource "aws_iam_role_policy_attachment" "read_iam_role_policy"{
   role = aws_iam_role.ec2_describe_asg.name
-  policy_arn = aws_iam_policy.read_iam_role_policy.arn
+  policy_arn = aws_iam_policy.read_iam_role.arn
 }
 
 
@@ -146,7 +146,7 @@ resource "aws_iam_role_policy_attachment" "read_iam_role_policy"{
 #위 역할의 instance profile을 만든다
 resource "aws_iam_instance_profile" "ec2_describe_asg_profile" {
   name = "ec2-describe-asg-profile"
-  role = aws_iam_role.ec2_describe_asg_profile.name
+  role = aws_iam_role.ec2_describe_asg.name
 } 
 
 
@@ -216,6 +216,7 @@ data "aws_iam_policy_document" "role_read" {
       "iam:GetPolicy",
       "iam:GetPolicyVersion"
     ]
+    resources = ["*"]
 
   }
 }
@@ -260,7 +261,7 @@ resource "aws_iam_role_policy_attachment" "role_read_attach" {
 #위 역할의 instance profile을 만든다
 resource "aws_iam_instance_profile" "ec2_athena_query_profile" {
   name = "ec2_athena_query-profile"
-  role = aws_iam_role.ec2_athena_query_profile.name
+  role = aws_iam_role.ec2_athena_query.name
 } 
 
 # 결론적으로 말하면 pem 키를 주어준다 그러면 이를 이용해 특정 ec2에 ssh로 접근하여 들어온다. 
