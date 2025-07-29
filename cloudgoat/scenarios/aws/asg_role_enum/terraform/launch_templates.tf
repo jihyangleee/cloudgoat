@@ -1,6 +1,6 @@
 resource "aws_key_pair" "cg_key" {
-  key_name   = "cg-key-${var.cgid}"
-  public_key = file("${path.module}/cloudgoat.pub")
+  key_name   = "cg-key"
+  public_key = file(var.ssh_public_key)
 }
 
 resource "aws_launch_template" "privileged1" {

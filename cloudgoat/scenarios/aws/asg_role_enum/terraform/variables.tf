@@ -10,6 +10,16 @@ variable "region" {
   type        = string
 }
 
+# SSH Public Key
+variable "ssh_public_key" {
+  default = "../cloudgoat.pub"
+}
+
+# SSH Private Key
+variable "ssh_private_key" {
+  default = "../cloudgoat"
+}
+
 variable "cgid" {
   description = "CloudGoat unique identifier."
   type        = string
