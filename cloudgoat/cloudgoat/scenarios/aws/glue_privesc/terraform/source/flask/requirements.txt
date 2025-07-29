@@ -1,4 +1,0 @@
-Flask
-boto3
-psycopg2-binary
-matplotlib
