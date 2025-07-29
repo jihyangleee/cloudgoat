@@ -1,7 +1,14 @@
+resource "aws_key_pair" "cg_key" {
+  key_name   = "cg-key-${var.cgid}"
+  public_key = file("${path.module}/cloudgoat.pub")
+}
+
 resource "aws_launch_template" "privileged1" {
   name_prefix   = "cg-privileged-1-"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = "t2.micro"
+
+  key_name = aws_key_pair.cg_key.key_name  # ← SSH 키 페어 연결
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2-describe-asg-profile.name
   }
@@ -23,6 +30,7 @@ resource "aws_launch_template" "privileged2" {
   name_prefix   = "cg-privileged-2-"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = "t2.micro"
+  key_name = aws_key_pair.cg_key.key_name  # ← SSH 키 페어 연결
   network_interfaces {
     device_index                = 0
     associate_public_ip_address = false               
@@ -41,6 +49,7 @@ resource "aws_launch_template" "privileged3" {
   name_prefix   = "cg-privileged-3-"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = "t2.micro"
+  key_name = aws_key_pair.cg_key.key_name  # ← SSH 키 페어 연결
   network_interfaces {
     device_index                = 0
     associate_public_ip_address = false               
@@ -59,6 +68,7 @@ resource "aws_launch_template" "privileged4" {
   name_prefix   = "cg-privileged-4-"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = "t2.micro"
+  key_name = aws_key_pair.cg_key.key_name  # ← SSH 키 페어 연결
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_athena_query_profile.name
   }
@@ -81,7 +91,7 @@ resource "aws_launch_template" "startEc2" {
   name_prefix   = "cg-start-Ec2"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = "t2.micro"
-
+  key_name = aws_key_pair.cg_key.key_name  # ← SSH 키 페어 연결
   network_interfaces {
     device_index                = 0
     associate_public_ip_address = false               
