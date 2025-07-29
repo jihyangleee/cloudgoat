@@ -118,19 +118,19 @@ resource "aws_athena_workgroup" "cg_workgroup" {
 
 # 4. Lake Formation 등록 및 권한 부여
 resource "aws_lakeformation_resource" "flag_db" {
-  arn                      = aws_glue_catalog_database.flag_db.arn
+  arn                      = "arn:aws:s3:::cg-${var.cgid}-athena-bucketstorage"
   role_arn                 = aws_iam_role.ec2_athena_query.arn
   use_service_linked_role = false
 }
 
 resource "aws_lakeformation_resource" "logs_db" {
-  arn                      = aws_glue_catalog_database.logs_db.arn
+  arn                      = "arn:aws:s3:::cg-${var.cgid}-athena-bucketstorage"
   role_arn                 = aws_iam_role.ec2_athena_query.arn
   use_service_linked_role = false
 }
 
 resource "aws_lakeformation_resource" "users_db" {
-  arn                      = aws_glue_catalog_database.users_db.arn
+  arn                      = "arn:aws:s3:::cg-${var.cgid}-athena-bucketstorage"
   role_arn                 = aws_iam_role.ec2_athena_query.arn
   use_service_linked_role = false
 }
