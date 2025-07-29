@@ -5,7 +5,7 @@ data "aws_instances" "launched_by_asg" {
   }
 
   filter {
-    name   = "whs_fronted"
+    name   = "instance-state-name"
     values = ["running"]
   }
 

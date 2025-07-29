@@ -117,23 +117,12 @@ resource "aws_athena_workgroup" "cg_workgroup" {
 }
 
 # 4. Lake Formation 등록 및 권한 부여
-resource "aws_lakeformation_resource" "flag_db" {
+resource "aws_lakeformation_resource" "storage" {
   arn                      = "arn:aws:s3:::cg-${var.cgid}-athena-bucketstorage"
   role_arn                 = aws_iam_role.ec2_athena_query.arn
   use_service_linked_role = false
 }
 
-resource "aws_lakeformation_resource" "logs_db" {
-  arn                      = "arn:aws:s3:::cg-${var.cgid}-athena-bucketstorage"
-  role_arn                 = aws_iam_role.ec2_athena_query.arn
-  use_service_linked_role = false
-}
-
-resource "aws_lakeformation_resource" "users_db" {
-  arn                      = "arn:aws:s3:::cg-${var.cgid}-athena-bucketstorage"
-  role_arn                 = aws_iam_role.ec2_athena_query.arn
-  use_service_linked_role = false
-}
 # 이거 전체 db 움직여 지는 게 맞는지 확인하고 테이블과 그 파일들 (s3)와 잘 연결하기
 # flag db를 제외하고 나머지 db를 이용한다. 
 
@@ -144,6 +133,7 @@ resource "aws_lakeformation_permissions" "athena_access_flag" {
   database {
     name = aws_glue_catalog_database.flag_db.name
   }
+   depends_on = [aws_lakeformation_resource.storage]
 }
 
 resource "aws_lakeformation_permissions" "athena_access_logs" {
@@ -153,6 +143,7 @@ resource "aws_lakeformation_permissions" "athena_access_logs" {
   database {
     name = aws_glue_catalog_database.logs_db.name
   }
+   depends_on = [aws_lakeformation_resource.storage]
 }
 
 resource "aws_lakeformation_permissions" "athena_access_users" {
@@ -162,6 +153,7 @@ resource "aws_lakeformation_permissions" "athena_access_users" {
   database {
     name = aws_glue_catalog_database.users_db.name
   }
+   depends_on = [aws_lakeformation_resource.storage]
 }
 
 
