@@ -24,20 +24,20 @@ resource "aws_s3_object" "flag_parquet" {
   bucket  = aws_s3_bucket.cg-athena-bucketstorage.id
   key     = "flag/flag.parquet"
   source  = "source/flag.parquet"  
-  etag    = filemd5("source/flag.parquet")
+  etag = filemd5("${path.module}/../source/flag.parquet")
 }
 
 resource "aws_s3_object" "logs_parquet" {
   bucket  = aws_s3_bucket.cg-athena-bucketstorage.id
   key     = "logs/logs.parquet"
   source  = "source/logs.parquet"
-  etag    = filemd5("source/logs.parquet")
+  etag = filemd5("${path.module}/../source/logs.parquet")
 }
 
 resource "aws_s3_object" "users_parquet" {
   bucket  = aws_s3_bucket.cg-athena-bucketstorage.id
   key     = "users/users.parquet"
   source  = "source/users.parquet"  
-  etag    = filemd5("source/users.parquet")
+  etag = filemd5("${path.module}/../source/users.parquet")
 }
 
