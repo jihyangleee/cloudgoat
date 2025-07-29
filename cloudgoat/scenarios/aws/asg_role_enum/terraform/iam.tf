@@ -108,7 +108,7 @@ resource "aws_iam_policy" "conditional_run_instance_policy" {
   policy = data.aws_iam_policy_document.conditional_run_instance.json
 }
 
-resource "aws_iam_policy" "read_iam_role" {
+resource "aws_iam_policy" "read_iam_role_policy" {
   name  = "cg-read-iam-role-${var.cgid}"
   policy = data.aws_iam_policy_document.read_iam_role.json
 }
@@ -145,7 +145,7 @@ resource "aws_iam_role_policy_attachment" "read_iam_role_policy"{
 
 #위 역할의 instance profile을 만든다
 resource "aws_iam_instance_profile" "ec2_describe_asg_profile" {
-  name = "ec2-describe-asg-profile"
+  name = "ec2_describe_asg_profile"
   role = aws_iam_role.ec2_describe_asg.name
 } 
 
@@ -260,7 +260,7 @@ resource "aws_iam_role_policy_attachment" "role_read_attach" {
 
 #위 역할의 instance profile을 만든다
 resource "aws_iam_instance_profile" "ec2_athena_query_profile" {
-  name = "ec2_athena_query-profile"
+  name = "ec2_athena_query_profile"
   role = aws_iam_role.ec2_athena_query.name
 } 
 
