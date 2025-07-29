@@ -32,7 +32,7 @@ resource "aws_glue_catalog_table" "flag_table" {
   table_type    = "EXTERNAL_TABLE"
 
   storage_descriptor {
-    location      = "s3://cg-athena-bucketstorage/flag/"
+    location      = "s3://cg-${var.cgid}-athena-bucketstorage/flag/"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 
@@ -54,7 +54,7 @@ resource "aws_glue_catalog_table" "logs_table" {
   table_type    = "EXTERNAL_TABLE"
 
   storage_descriptor {
-    location      = "s3://cg-athena-bucketstorage/logs/"
+    location      = "s3://cg-${var.cgid}-athena-bucketstorage/logs/"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 
@@ -81,7 +81,7 @@ resource "aws_glue_catalog_table" "users_table" {
   table_type    = "EXTERNAL_TABLE"
 
   storage_descriptor {
-    location      = "s3://cg-athena-bucketstorage/users/"
+    location      = "s3://cg-${var.cgid}-athena-bucketstorage/users/"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 
@@ -107,7 +107,7 @@ resource "aws_athena_workgroup" "cg_workgroup" {
   name = "cg-athena-lf-wg"
   configuration {
     result_configuration {
-      output_location = "s3://cg-athena-bucketresult/" 
+      output_location = "s3://cg-${var.cgid}-athena-bucketresult/" 
     }
     enforce_workgroup_configuration = true
   }
@@ -138,7 +138,7 @@ resource "aws_lakeformation_permissions" "athena_access_flag" {
 
 resource "aws_lakeformation_permissions" "athena_access_logs" {
   principal   = aws_iam_role.ec2_athena_query.arn
-  permissions = ["SELECT"]
+  permissions = ["DESCRIBE"]
 
   database {
     name = aws_glue_catalog_database.logs_db.name
@@ -148,7 +148,7 @@ resource "aws_lakeformation_permissions" "athena_access_logs" {
 
 resource "aws_lakeformation_permissions" "athena_access_users" {
   principal   = aws_iam_role.ec2_athena_query.arn
-  permissions = ["SELECT"]
+  permissions = ["DESCRIBE"]
 
   database {
     name = aws_glue_catalog_database.users_db.name
