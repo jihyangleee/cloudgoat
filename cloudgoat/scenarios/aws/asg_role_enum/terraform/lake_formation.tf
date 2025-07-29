@@ -125,7 +125,7 @@ resource "aws_lakeformation_resource" "flag_db" {
 
 resource "aws_lakeformation_resource" "logs_db" {
   arn                      = aws_glue_catalog_database.logs_db.arn
-  role_arn                 = aws_iam_role.aec2_athena_query.arn
+  role_arn                 = aws_iam_role.ec2_athena_query.arn
   use_service_linked_role = false
 }
 
