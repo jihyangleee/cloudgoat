@@ -37,7 +37,7 @@ data "aws_iam_policy_document" "passrole" {
   statement {
     sid       = "AllowPassRole"
     actions   = ["iam:PassRole"]
-    resources = ["*"]
+    resources = [aws_iam_role.ec2_athena_query.arn]
   }
 
   statement {
@@ -48,19 +48,20 @@ data "aws_iam_policy_document" "passrole" {
 }
 
 # (3) conditional_run_instance
-data "aws_iam_policy_document" "conditional_run_instance"{
-  statement{
-    sid = "EnableRunInsatncesEvaluation"
-    actions = ["ec2:RunInstances"]
-    resources = ["*"]
-  }
-
-  statement{
+data "aws_iam_policy_document" "conditional_run_instance" {
+  statement {
     sid = "AllowRunInstancesOnlyWithSpecificLT"
     actions = ["ec2:RunInstances"]
-    resources = [aws_launch_template.startEc2.arn]
+    resources = ["*"] # 여기서는 *을 쓰되, Condition으로 제한
+
+    condition {
+      test     = "ArnEquals"
+      variable = "ec2:LaunchTemplate"
+      values   = [aws_launch_template.startEc2.arn]
+    }
   }
 }
+
 
 # (4) read_iam_role
 data "aws_iam_policy_document" "read_iam_role"{
@@ -79,7 +80,6 @@ data "aws_iam_policy_document" "read_iam_role"{
     "iam:GetPolicyVersion"]
 
     resources = [aws_iam_policy.describe_asg_policy.arn,
-    aws_iam_policy.passrole_policy.arn,
     aws_iam_policy.conditional_run_instance_policy.arn
     ]
   }
@@ -167,7 +167,7 @@ data "aws_iam_policy_document" "athena_s3" {
     ]
     resources = ["*"]
   }
-
+  
   statement{
     
         sid      = "LakeFormationAccess"
@@ -179,7 +179,7 @@ data "aws_iam_policy_document" "athena_s3" {
       
   }
 
-  statement{
+                          statement{
     sid = "AthenaWriteResults"
     actions = [
       "s3:GetBucketLocation",
@@ -189,8 +189,38 @@ data "aws_iam_policy_document" "athena_s3" {
       resources = [
     "arn:aws:s3:::cg-${var.cgid}-athena-bucketresult",
     "arn:aws:s3:::cg-${var.cgid}-athena-bucketresult/*"]
-  }                          
+  }  
 
+  
+}
+#(2) RoleRead
+data "aws_iam_policy_document" "role_read" {
+  statement {
+    sid = "AllowReadAccessToRolePolices"
+    actions = [
+      "iam:ListAttachedRolePolicies",
+      "iam:ListRolePolicies"
+    ]
+    resources = [aws_iam_role.ec2_athena_query.arn]
+
+  }
+
+  statement {
+    sid = "AllowReadAccessToRolePolices"
+    actions = [
+      
+      "iam:GetRolePolicy",
+      "iam:GetPolicy",
+      "iam:GetPolicyVersion"
+    ]
+    resources = [aws_iam_policy.athena_s3_policy.arn,
+    aws_iam_policy.role_read_policy.arn
+    ]
+  }
+}
+
+
+data "aws_iam_policy_document" "read_s3" {
   statement{
     sid = "AthenaReadStorage"
     actions = [
@@ -203,21 +233,8 @@ data "aws_iam_policy_document" "athena_s3" {
   "arn:aws:s3:::cg-${var.cgid}-athena-bucketstorage",
   "arn:aws:s3:::cg-${var.cgid}-athena-bucketstorage/*"]
   }
-}
-#(2) RoleRead
-data "aws_iam_policy_document" "role_read" {
-  statement {
-    sid = "AllowReadAccessToRolePolices"
-    actions = [
-      "iam:ListAttachedRolePolicies",
-      "iam:ListRolePolicies",
-      "iam:GetRolePolicy",
-      "iam:GetPolicy",
-      "iam:GetPolicyVersion"
-    ]
-    resources = ["*"]
-
-  }
+  
+ 
 }
 
 # 역할 policy 랑 attach
@@ -233,9 +250,15 @@ resource "aws_iam_policy" "athena_s3_policy" {
 }
 
 resource "aws_iam_policy" "role_read_policy" {
-  name   = "cg-athena-role_read_policy-${var.cgid}"
+  name   = "cg-athena-role-read-policy-${var.cgid}"
   policy = data.aws_iam_policy_document.role_read.json
 }
+
+resource "aws_iam_policy" "read_s3_policy" {
+  name   = "cg-athena-read-s3-policy-${var.cgid}"
+  policy = data.aws_iam_policy_document.read_s3.json
+}
+
 resource "aws_iam_role_policy_attachment" "athena_s3_attach" {
   role       = aws_iam_role.ec2_athena_query.name
   policy_arn = aws_iam_policy.athena_s3_policy.arn
@@ -244,6 +267,11 @@ resource "aws_iam_role_policy_attachment" "athena_s3_attach" {
 resource "aws_iam_role_policy_attachment" "role_read_attach" {
   role       = aws_iam_role.ec2_athena_query.name
   policy_arn = aws_iam_policy.role_read_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "read_s3_attach" {
+  role       = aws_iam_role.ec2_athena_query.name
+  policy_arn = aws_iam_policy.read_s3_policy.arn
 }
 
 

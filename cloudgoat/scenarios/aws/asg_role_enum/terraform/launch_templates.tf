@@ -99,12 +99,7 @@ resource "aws_launch_template" "startEc2" {
     security_groups             = [aws_security_group.cg_deny_ssh.id]  # SG 연결
   }
 
-  tag_specifications {
-    resource_type = "instance"
-    tags = {
-      Name = "startEc2-LaunchTemplate"
-    }
-  }
+
 }
 
 
