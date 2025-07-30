@@ -1,5 +1,5 @@
 resource "aws_key_pair" "cg_key" {
-  key_name   = "cg-key"
+  key_name   = "cg-key-pair-${var.cgid}"
   public_key = file(var.ssh_public_key)
 }
 
