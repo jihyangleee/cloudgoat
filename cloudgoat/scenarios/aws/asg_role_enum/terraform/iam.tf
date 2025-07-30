@@ -213,8 +213,7 @@ data "aws_iam_policy_document" "role_read" {
       "iam:GetPolicy",
       "iam:GetPolicyVersion"
     ]
-    resources = [aws_iam_policy.athena_s3_policy.arn,
-    aws_iam_policy.role_read_policy.arn
+    resources = [aws_iam_policy.athena_s3_policy.arn
     ]
   }
 }
