@@ -75,7 +75,7 @@ data "aws_iam_policy_document" "read_iam_role"{
     ]
   }
   statement{
-    sid = "AllowOnlySpecificRole"
+    sid = "AllowOnlySpecificPolicy"
     actions = ["iam:GetPolicy",
     "iam:GetPolicyVersion"]
 
@@ -196,7 +196,7 @@ data "aws_iam_policy_document" "athena_s3" {
 #(2) RoleRead
 data "aws_iam_policy_document" "role_read" {
   statement {
-    sid = "AllowReadAccessToRolePolices"
+    sid = "AllowReadAccessToRole"
     actions = [
       "iam:ListAttachedRolePolicies",
       "iam:ListRolePolicies"
@@ -206,7 +206,7 @@ data "aws_iam_policy_document" "role_read" {
   }
 
   statement {
-    sid = "AllowReadAccessToRolePolices"
+    sid = "AllowReadAccessToPolices"
     actions = [
       
       "iam:GetRolePolicy",
